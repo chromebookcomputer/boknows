@@ -1,0 +1,51 @@
+import { WebSocket } from "ws";
+dotenv.config();
+import {
+  Exchange,
+  MAINNET_API_URL,
+  MarketData,
+  OrderRequest,
+  Tif,
+  Universe,
+  UniverseItem,
+  UserState,
+} from "./ts-sdk";
+
+import {
+  red,
+  bgYellow,
+  bgGreen,
+  blue,
+  bgRed,
+  bgMagenta,
+  bgBlue,
+  magenta,
+} from "chalk";
+import { getWebsockerUrl, sleep } from "./utils";
+import axios from "axios";
+const privateKey = process.env.ACCOUNT7_PRIVATE_KEY;
+if (!privateKey) {
+  throw new Error("Please set your private key in .env file");
+}
+
+const wallet = new ethers.Wallet(privateKey);
+
+const STOP_AFTER = 130;
+
+const WEBSOCKET_URL = getWebsockerUrl(false);
+const tokens = ["ARB", "APT"];
+const maxlevminus = 12;
+
+let tradeticker = 0;
+let ticker = 0;
+let mids = {};
+let longCloids = [] as any;
+let shortCloids = [] as any;
+let exchange: Exchange;
+let coinInfo: IcoinInfo;
+let currentSize: number;
+let TOKEN = tokens[0];
+
+interface IcoinInfo {
+  [key: string]: IcoinInfoDetails;
+}
